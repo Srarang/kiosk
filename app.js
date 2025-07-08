@@ -1,3 +1,7 @@
+let selectedFacility = "";
+let selectedRoom = "";
+let selectedTime = "";
+
 function completeReservation() {
   const name = document.getElementById("user-name").value;
   const birth = document.getElementById("user-birth").value;
