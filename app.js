@@ -2,6 +2,24 @@ let selectedFacility = "";
 let selectedRoom = "";
 let selectedTime = "";
 
+function selectFacility(element) {
+  selectedFacility = element.querySelector(".facility-name").innerText;
+  document.querySelectorAll(".facility-card").forEach(card => card.classList.remove("selected"));
+  element.classList.add("selected");
+}
+
+function selectRoomNumber(element) {
+  selectedRoom = element.innerText;
+  document.querySelectorAll(".number-card").forEach(card => card.classList.remove("selected"));
+  element.classList.add("selected");
+}
+
+function selectTimeSlot(element) {
+  selectedTime = element.dataset.time;
+  document.querySelectorAll(".time-slot").forEach(slot => slot.classList.remove("selected"));
+  element.classList.add("selected");
+}
+
 function completeReservation() {
   const name = document.getElementById("user-name").value;
   const birth = document.getElementById("user-birth").value;
