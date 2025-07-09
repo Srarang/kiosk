@@ -4,7 +4,7 @@ var firebaseConfig = {
   authDomain: "kioskst-d67ef.firebaseapp.com",
   databaseURL: "https://kioskst-d67ef-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "kioskst-d67ef",
-  storageBucket: "kioskst-d67ef.firebasestorage.app",
+  storageBucket: "kioskst-d67ef.appspot.com",
   messagingSenderId: "406076353975",
   appId: "1:406076353975:web:095c9097b71a01e7f84c32"
 };
