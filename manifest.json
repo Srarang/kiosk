@@ -1,7 +1,7 @@
 {
   "name": "흥덕청소년문화의집 예약",
   "short_name": "시설예약",
-  "start_url": "./index.html",
+  "start_url": "/kiosk/"
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ff6b6b",
