@@ -146,16 +146,48 @@ function initializeFacilityNumberScreen() {
     numbers = ['1번', '2번'];
   }
 
+// Firebase에서 오늘 예약 데이터 가져와서 예약된 번호 확인
+  const today = new Date().toISOString().split("T")[0];
+  const dbRef = firebase.database().ref("reservations");
+  
+  dbRef.once("value").then(snapshot => {
+    const firebaseReservations = [];
+    snapshot.forEach(child => {
+      const reservation = child.val();
+      if (reservation.date === today && 
+          reservation.facility === selectedFacility && 
+          reservation.time === selectedTime) {
+        firebaseReservations.push(reservation);
+      }
+    });
+
+    // 예약된 번호 목록
+    const reservedNumbers = firebaseReservations.map(r => r.room || r.facilityNumber);
+  
   numbers.forEach(num => {
-    const numberCard = document.createElement('div');
-    numberCard.classList.add('number-card');
-    if (selectedFacility === '닌텐도' && num === '9번') {
-      numberCard.innerHTML = '<div>9번</div><div style="font-size:0.9em; color:#ff8c00; margin-top:2px;">배려석</div>';
-    } else {
-      numberCard.textContent = num;
-    }
-    numberCard.setAttribute('onclick', 'selectFacilityNumber(this)');
-    numberGrid.appendChild(numberCard);
+      const numberCard = document.createElement('div');
+      numberCard.classList.add('number-card');
+      
+      // 이미 예약된 번호인지 확인
+      const isReserved = reservedNumbers.includes(num);
+      if (isReserved) {
+        numberCard.classList.add('unavailable');
+      }
+      
+      if (selectedFacility === '닌텐도' && num === '9번') {
+        numberCard.innerHTML = '<div>9번</div><div style="font-size:0.9em; color:#ff8c00; margin-top:2px;">배려석</div>';
+      } else {
+        numberCard.textContent = num;
+      }
+      
+      if (!isReserved) {
+        numberCard.setAttribute('onclick', 'selectFacilityNumber(this)');
+      }
+      
+      numberGrid.appendChild(numberCard);
+    });
+  }).catch(error => {
+    console.error('Firebase 데이터 로드 실패:', error);
   });
 }
 
@@ -234,22 +266,57 @@ function updateTimeSlotAvailability() {
       const timeData = slot.getAttribute('data-time');
       slot.classList.remove('unavailable', 'selected');
       
-      // 현재 선택된 시설과 번호에 대한 예약이 있는지 확인
-      // Firebase와 로컬스토리지 필드명 모두 확인
-      const isReserved = firebaseReservations.some(r => 
-        r.facility === selectedFacility && 
-        (r.room === selectedFacilityNumber || r.facilityNumber === selectedFacilityNumber) && // 둘 다 확인
-        r.date === today && 
-        r.time === timeData
-      );
+      // 현재 선택된 시설의 모든 방 번호 확인
+      let isTimeSlotUnavailable = false;
       
-      if (isReserved) {
+      if (selectedFacility === '댄스\n연습실' || selectedFacility === '강의실') {
+        // 번호가 없는 시설: 시설 + 시간만 확인
+        const isReserved = firebaseReservations.some(r => 
+          r.facility === selectedFacility && 
+          r.date === today && 
+          r.time === timeData
+        );
+        if (isReserved) {
+          isTimeSlotUnavailable = true;
+        }
+      } else {
+        // 번호가 있는 시설: 모든 방 번호가 예약되었는지 확인
+        const facilityNumbers = getFacilityNumbers(selectedFacility);
+        const allNumbersReserved = facilityNumbers.every(num => {
+          return firebaseReservations.some(r => 
+            r.facility === selectedFacility && 
+            (r.room === num || r.facilityNumber === num) && 
+            r.date === today && 
+            r.time === timeData
+          );
+        });
+        
+        if (allNumbersReserved) {
+          isTimeSlotUnavailable = true;
+        }
+      }
+      
+      if (isTimeSlotUnavailable) {
         slot.classList.add('unavailable');
       }
     });
   }).catch(error => {
     console.error('Firebase 데이터 로드 실패:', error);
   });
+}
+
+// 시설별 방 번호를 반환하는 헬퍼 함수
+function getFacilityNumbers(facility) {
+  if (facility === '닌텐도') {
+    return ['1번', '2번', '3번', '4번', '5번', '6번', '7번', '8번', '9번'];
+  } else if (facility === '플레이\n스테이션') {
+    return ['1번', '2번'];
+  } else if (facility === '노래방') {
+    return ['1번', '2번'];
+  } else if (facility === '보드\n게임') {
+    return ['1번', '2번'];
+  }
+  return [];
 }
 
 function selectTimeSlot(element) {
@@ -848,6 +915,11 @@ function setupDownloadModalEvents() {
 }
 
 function selectFacilityNumber(element) {
+  // 예약된 번호는 선택할 수 없음
+  if (element.classList.contains('unavailable')) {
+    return;
+  }
+  
   document.querySelectorAll('.number-card').forEach(card => card.classList.remove('selected'));
   element.classList.add('selected');
   selectedFacilityNumber = element.textContent;
