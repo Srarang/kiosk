@@ -180,19 +180,13 @@ function initializeFacilityNumberScreen() {
         numberCard.style.border = '2px solid #dee2e6';
         numberCard.style.position = 'relative';
         
-        // "예약됨" 텍스트 추가
+        // "예약불가" 텍스트를 번호 밑에 추가
         const reservedText = document.createElement('div');
-        reservedText.textContent = '예약됨';
-        reservedText.style.position = 'absolute';
-        reservedText.style.top = '50%';
-        reservedText.style.left = '50%';
-        reservedText.style.transform = 'translate(-50%, -50%)';
-        reservedText.style.background = 'rgba(0, 0, 0, 0.8)';
-        reservedText.style.color = 'white';
-        reservedText.style.padding = '2px 6px';
-        reservedText.style.borderRadius = '4px';
+        reservedText.textContent = '예약불가';
+        reservedText.style.color = '#6c757d';
         reservedText.style.fontSize = '0.7em';
-        reservedText.style.zIndex = '10';
+        reservedText.style.marginTop = '2px';
+        reservedText.style.fontWeight = 'normal';
         numberCard.appendChild(reservedText);
       }
       
