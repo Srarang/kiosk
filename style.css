@@ -709,18 +709,33 @@ body {
 }
 
 .number-card.unavailable {
-  background: #e9ecef;
-  color: #6c757d;
-  cursor: not-allowed;
-  opacity: 0.6;
-  border: 2px solid #dee2e6;
+  background: #e9ecef !important;
+  color: #6c757d !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+  border: 2px solid #dee2e6 !important;
+  position: relative;
+}
+
+.number-card.unavailable::before {
+  content: "예약됨";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  z-index: 10;
 }
 
 .number-card.unavailable:hover {
-  transform: none;
-  box-shadow: none;
-  background: #e9ecef;
-  color: #6c757d;
+  transform: none !important;
+  box-shadow: none !important;
+  background: #e9ecef !important;
+  color: #6c757d !important;
 }
 
 /* 타임테이블 스타일 */
