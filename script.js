@@ -125,12 +125,8 @@ function selectFacility(element) {
   };
   selectedFacility = facilityNameMap[name] || name;
   
-  if (selectedFacility === '댄스\n연습실' || selectedFacility === '강의실') {
-    selectedFacilityNumber = ''; // 번호 없음
-    showScreen('datetime-screen'); // 바로 날짜/시간 선택 화면으로 이동
-  } else {
-    showScreen('facility-number-screen'); // 기존대로 번호 선택 화면으로 이동
-  }
+  // 모든 시설에서 날짜/시간 선택 화면으로 이동
+  showScreen('datetime-screen');
 }
 
 // 시설별 번호를 동적으로 생성
@@ -1063,3 +1059,32 @@ function searchReservationsFirebase() {
     document.getElementById("search-results").style.display = "block";
   });
 }
+
+function proceedAfterDateTime() {
+  // 시간이 선택되었는지 확인
+  if (!selectedTime) {
+    alert('시간을 선택해주세요.');
+    return;
+  }
+  
+  // 댄스연습실과 강의실은 번호가 없으므로 바로 예약 완료
+  if (selectedFacility === '댄스\n연습실' || selectedFacility === '강의실') {
+    selectedFacilityNumber = ''; // 번호 없음
+    completeReservationFirebase();
+  } else {
+    // 번호가 있는 시설은 번호 선택 화면으로 이동
+    showScreen('facility-number-screen');
+  }
+}
+
+function proceedAfterFacilityNumber() {
+  // 번호가 선택되었는지 확인
+  if (!selectedFacilityNumber) {
+    alert('이용 공간을 선택해주세요.');
+    return;
+  }
+  
+  // 예약 완료
+  completeReservationFirebase();
+}
+
