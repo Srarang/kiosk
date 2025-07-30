@@ -239,9 +239,10 @@ function updateTimeSlotAvailability() {
       slot.classList.remove('unavailable', 'selected');
       
       // 현재 선택된 시설과 번호에 대한 예약이 있는지 확인
+      // Firebase와 로컬스토리지 필드명 모두 확인
       const isReserved = firebaseReservations.some(r => 
         r.facility === selectedFacility && 
-        r.room === selectedFacilityNumber && 
+        (r.room === selectedFacilityNumber || r.facilityNumber === selectedFacilityNumber) && // 둘 다 확인
         r.date === today && 
         r.time === timeData
       );
@@ -339,18 +340,23 @@ function loadReservationStatus() {
     const firebaseReservations = [];
     snapshot.forEach(child => {
       const reservation = child.val();
+      console.log('개별 현황 Firebase 데이터:', reservation); // 디버깅용
       if (reservation.date === today) {
         firebaseReservations.push(reservation);
       }
     });
+    
+    console.log('오늘 개별 현황 Firebase 예약:', firebaseReservations); // 디버깅용
     
     if (firebaseReservations.length === 0) {
       reservationList.innerHTML = `<div class="no-reservations">📝 아직 예약된 시설이 없습니다.<br>새로운 예약을 만들어보세요!</div>`;
     } else {
       let html = '';
       firebaseReservations.forEach(r => {
+        // Firebase와 로컬스토리지 필드명 모두 확인
+        const roomNumber = r.room || r.facilityNumber || '';
         html += `<div class="reservation-item">
-          <h3>🏢 ${r.facility} ${r.room || ''}</h3>
+          <h3>🏢 ${r.facility} ${roomNumber}</h3>
           <p><strong>👤 예약자:</strong> ${r.name}</p>
           <p><strong>📅 날짜:</strong> ${r.date}</p>
           <p><strong>⏰ 시간:</strong> ${r.time}</p>
@@ -363,7 +369,6 @@ function loadReservationStatus() {
     console.error('Firebase 데이터 로드 실패:', error);
     reservationList.innerHTML = '<div style="text-align:center; padding:20px; color:red;">데이터 로드 실패</div>';
   });
-}
 }
 
 function loadAllStatus() {
@@ -378,6 +383,7 @@ function loadAllStatus() {
     const firebaseReservations = [];
     snapshot.forEach(child => {
       const reservation = child.val();
+      console.log('Firebase 예약 데이터:', reservation); // 디버깅용
       if (reservation.date === today) {
         firebaseReservations.push(reservation);
       }
@@ -429,9 +435,10 @@ function loadAllStatus() {
           // 번호가 있는 시설 (닌텐도, 플레이스테이션, 노래방, 보드게임)
           const reservedNumbers = [];
           facility.numbers.forEach(num => {
+            // Firebase와 로컬스토리지 필드명 모두 확인
             const isReserved = firebaseReservations.some(r => 
               r.facility === facility.name && 
-              r.room === num && 
+              (r.room === num || r.facilityNumber === num) && // 둘 다 확인
               r.date === today && 
               r.time === timeSlot
             );
