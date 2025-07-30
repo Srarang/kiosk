@@ -172,6 +172,10 @@ function initializeFacilityNumberScreen() {
       const isReserved = reservedNumbers.includes(num);
       if (isReserved) {
         numberCard.classList.add('unavailable');
+        // 기존 내용 완전히 제거
+        numberCard.textContent = '';
+        numberCard.innerHTML = '';
+        
         // 직접 스타일 적용
         numberCard.style.background = '#e9ecef';
         numberCard.style.color = '#6c757d';
@@ -180,7 +184,7 @@ function initializeFacilityNumberScreen() {
         numberCard.style.border = '2px solid #dee2e6';
         numberCard.style.position = 'relative';
         
-        // 기존 내용을 완전히 교체 (기존 텍스트 제거)
+        // 새로운 내용 추가
         if (selectedFacility === '닌텐도' && num === '9번') {
           numberCard.innerHTML = `
             <div>9번</div>
