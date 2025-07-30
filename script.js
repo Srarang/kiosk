@@ -172,6 +172,28 @@ function initializeFacilityNumberScreen() {
       const isReserved = reservedNumbers.includes(num);
       if (isReserved) {
         numberCard.classList.add('unavailable');
+        // 직접 스타일 적용
+        numberCard.style.background = '#e9ecef';
+        numberCard.style.color = '#6c757d';
+        numberCard.style.cursor = 'not-allowed';
+        numberCard.style.opacity = '0.6';
+        numberCard.style.border = '2px solid #dee2e6';
+        numberCard.style.position = 'relative';
+        
+        // "예약됨" 텍스트 추가
+        const reservedText = document.createElement('div');
+        reservedText.textContent = '예약됨';
+        reservedText.style.position = 'absolute';
+        reservedText.style.top = '50%';
+        reservedText.style.left = '50%';
+        reservedText.style.transform = 'translate(-50%, -50%)';
+        reservedText.style.background = 'rgba(0, 0, 0, 0.8)';
+        reservedText.style.color = 'white';
+        reservedText.style.padding = '2px 6px';
+        reservedText.style.borderRadius = '4px';
+        reservedText.style.fontSize = '0.7em';
+        reservedText.style.zIndex = '10';
+        numberCard.appendChild(reservedText);
       }
       
       if (selectedFacility === '닌텐도' && num === '9번') {
