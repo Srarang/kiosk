@@ -704,8 +704,23 @@ body {
 .number-card.selected {
   background: linear-gradient(135deg, #ff6b6b, #feca57);
   color: white;
-  border-color: #ff6b6b;
   transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.number-card.unavailable {
+  background: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+  border: 2px solid #dee2e6;
+}
+
+.number-card.unavailable:hover {
+  transform: none;
+  box-shadow: none;
+  background: #e9ecef;
+  color: #6c757d;
 }
 
 /* 타임테이블 스타일 */
