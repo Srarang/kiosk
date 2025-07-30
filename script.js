@@ -180,7 +180,7 @@ function initializeFacilityNumberScreen() {
         numberCard.style.border = '2px solid #dee2e6';
         numberCard.style.position = 'relative';
         
-        // 기존 내용을 완전히 교체
+        // 기존 내용을 완전히 교체 (기존 텍스트 제거)
         if (selectedFacility === '닌텐도' && num === '9번') {
           numberCard.innerHTML = `
             <div>9번</div>
