@@ -180,23 +180,26 @@ function initializeFacilityNumberScreen() {
         numberCard.style.border = '2px solid #dee2e6';
         numberCard.style.position = 'relative';
         
-        // "예약불가" 텍스트를 번호 밑에 추가
-        const reservedText = document.createElement('div');
-        reservedText.textContent = '예약불가';
-        reservedText.style.color = '#6c757d';
-        reservedText.style.fontSize = '0.7em';
-        reservedText.style.marginTop = '2px';
-        reservedText.style.fontWeight = 'normal';
-        numberCard.appendChild(reservedText);
-      }
-      
-      if (selectedFacility === '닌텐도' && num === '9번') {
-        numberCard.innerHTML = '<div>9번</div><div style="font-size:0.9em; color:#ff8c00; margin-top:2px;">배려석</div>';
+        // 기존 내용을 완전히 교체
+        if (selectedFacility === '닌텐도' && num === '9번') {
+          numberCard.innerHTML = `
+            <div>9번</div>
+            <div style="font-size:0.9em; color:#ff8c00; margin-top:2px;">배려석</div>
+            <div style="color:#6c757d; font-size:0.7em; margin-top:2px; font-weight:normal;">예약불가</div>
+          `;
+        } else {
+          numberCard.innerHTML = `
+            <div>${num}</div>
+            <div style="color:#6c757d; font-size:0.7em; margin-top:2px; font-weight:normal;">예약불가</div>
+          `;
+        }
       } else {
-        numberCard.textContent = num;
-      }
-      
-      if (!isReserved) {
+        // 예약되지 않은 번호
+        if (selectedFacility === '닌텐도' && num === '9번') {
+          numberCard.innerHTML = '<div>9번</div><div style="font-size:0.9em; color:#ff8c00; margin-top:2px;">배려석</div>';
+        } else {
+          numberCard.textContent = num;
+        }
         numberCard.setAttribute('onclick', 'selectFacilityNumber(this)');
       }
       
